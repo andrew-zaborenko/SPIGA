@@ -22,7 +22,7 @@ class SPIGAFramework:
 
         # Pretreatment initialization
         self.transforms = pretreat.get_transformers(self.model_cfg)
-
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         # SPIGA model
         self.model_inputs = ['image', "model3d", "cam_matrix"]
         self.model = SPIGA(num_landmarks=model_cfg.dataset.num_landmarks,
@@ -36,13 +36,14 @@ class SPIGAFramework:
         if self.model_cfg.load_model_url:
             model_state_dict = torch.hub.load_state_dict_from_url(self.model_cfg.model_weights_url,
                                                                   model_dir=weights_path,
-                                                                  file_name=self.model_cfg.model_weights)
+                                                                  file_name=self.model_cfg.model_weights, map_location=device)
         else:
             weights_file = os.path.join(weights_path, self.model_cfg.model_weights)
-            model_state_dict = torch.load(weights_file)
+            model_state_dict = torch.load(weights_file, map_location=device)
 
         self.model.load_state_dict(model_state_dict)
-        self.model = self.model.cuda(gpus[0])
+        if device == 'cuda':
+            self.model = self.model.cuda(gpus[0])
         self.model.eval()
         print('SPIGA model loaded!')
 
@@ -135,5 +136,8 @@ class SPIGAFramework:
                 data[k] = self._data2device(v)
         else:
             with torch.no_grad():
-                data_var = data.cuda(device=self.gpus[0], non_blocking=True)
+                if device == 'cuda':
+                    data_var = data.cuda(device=self.gpus[0], non_blocking=True)
+                else:
+                    data_var = data
         return data_var
