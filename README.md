@@ -21,6 +21,7 @@ from spiga.inference.framework import SPIGAFramework
 dataset = 'wflw'
 processor = SPIGAFramework(ModelConfig(dataset))
 features, embeddings = processor.inference(image, [bbox])
+landmarks = np.array(features['landmarks'][0])
 ```
 
 TODO: Add CPU inference support, for now only works with CUDA. 
