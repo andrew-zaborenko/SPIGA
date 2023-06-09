@@ -65,9 +65,10 @@ class SPIGAFramework:
                                 'headpose': list with shape (num_bbox, 6) euler->[:3], trl->[3:]
         """
         batch_crops, crop_bboxes = self.pretreat(image, bboxes)
-        outputs = self.net_forward(batch_crops)
+        outputs, embeddings = self.net_forward(batch_crops)
+        cnn_embeddings = embeddings[1]['VisualField'][-1]
         features = self.postreatment(outputs, crop_bboxes, bboxes)
-        return features
+        return features, cnn_embeddings # return embeddings
 
     def pretreat(self, image, bboxes):
         crop_bboxes = []
@@ -92,7 +93,8 @@ class SPIGAFramework:
 
     def net_forward(self, inputs):
         outputs = self.model(inputs)
-        return outputs
+        embeddings = self.model.backbone_forward(inputs) # get backbone features
+        return outputs, embeddings
 
     def postreatment(self, output, crop_bboxes, bboxes):
         features = {}
