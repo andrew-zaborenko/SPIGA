@@ -24,7 +24,7 @@ features, embeddings = processor.inference(image, [bbox])
 landmarks = np.array(features['landmarks'][0])
 ```
 
-TODO: Add CPU inference support, for now only works with CUDA. 
+Also added CPU support in inference model loading, previously the framework was written only with CUDA.
 
 # SPIGA: Shape Preserving Facial Landmarks with Graph Attention Networks.
 
