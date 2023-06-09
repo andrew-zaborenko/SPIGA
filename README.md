@@ -1,3 +1,31 @@
+My changes: used ```model.backbone_forward()``` on the input features to generate itermediate embeddings of shape ```[1, 256, 64, 64]```.
+Actual ```backbone_forward[1]['VisualField']``` returns all the outputs of CNN layers in a list, I just return the output of the last layer. 
+
+```
+
+Sample code:
+import cv2
+import json
+import numpy as np
+from google.colab.patches import cv2_imshow
+
+# Load image and bbox
+image = cv2.imread("/content/SPIGA/assets/colab/image_sportsfan.jpg")
+with open('/content/SPIGA/assets/colab/bbox_sportsfan.json') as jsonfile:
+    bbox = json.load(jsonfile)['bbox']
+    
+from spiga.inference.config import ModelConfig
+from spiga.inference.framework import SPIGAFramework
+
+
+# Process image
+dataset = 'wflw'
+processor = SPIGAFramework(ModelConfig(dataset))
+features, embeddings = processor.inference(image, [bbox])
+```
+
+
+
 # SPIGA: Shape Preserving Facial Landmarks with Graph Attention Networks.
 
 [![Project Page](https://badgen.net/badge/color/Project%20Page/purple?icon=atom&label)](https://bmvc2022.mpi-inf.mpg.de/155/)
