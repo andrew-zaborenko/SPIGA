@@ -1,9 +1,8 @@
 My changes: used ```model.backbone_forward()``` on the input features to generate itermediate embeddings of shape ```[1, 256, 64, 64]```.
 Actual ```backbone_forward[1]['VisualField']``` returns all the outputs of CNN layers in a list, I just return the output of the last layer. 
 
-```
-
 Sample code:
+```
 import cv2
 import json
 import numpy as np
