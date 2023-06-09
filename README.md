@@ -23,7 +23,7 @@ processor = SPIGAFramework(ModelConfig(dataset))
 features, embeddings = processor.inference(image, [bbox])
 ```
 
-
+TODO: Add CPU inference support, for now only works with CUDA. 
 
 # SPIGA: Shape Preserving Facial Landmarks with Graph Attention Networks.
 
